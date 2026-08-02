@@ -1,0 +1,554 @@
+{
+  "name": "Workflow 4 : Interview Scheduling & Notifications.",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "oDaoBZ49MACNNDnI",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/oDaoBZ49MACNNDnI",
+          "cachedResultName": "Workflow 5 - Offer Letter Generation"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "phone": "={{ $('Receive Approved Candidate').item.json.phone }}",
+            "candidateId": "={{ $json['Candidate ID'] }}",
+            "candidateName": "={{ $('Receive Approved Candidate').item.json.candidateName }}",
+            "email": "={{ $('Receive Approved Candidate').item.json.email }}",
+            "position": "={{ $('Receive Approved Candidate').item.json.position }}",
+            "resumeLink": "={{ $('Receive Approved Candidate').item.json.resumeLink }}",
+            "status": "={{ $json.Status }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "candidateId",
+              "displayName": "candidateId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "candidateName",
+              "displayName": "candidateName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "position",
+              "displayName": "position",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "resumeLink",
+              "displayName": "resumeLink",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1248,
+        -96
+      ],
+      "id": "8b8f943c-29f4-49eb-980a-ae0e93582e62",
+      "name": "Call 'Workflow 5 - Offer Letter Generation'"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "candidateId"
+            },
+            {
+              "name": "candidateName"
+            },
+            {
+              "name": "email"
+            },
+            {
+              "name": "position"
+            },
+            {
+              "name": "resumeLink"
+            },
+            {
+              "name": "phone",
+              "type": "number"
+            },
+            {
+              "name": "status"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        176,
+        -96
+      ],
+      "id": "1bb52e57-2462-4f4b-b636-4706e9313c25",
+      "name": "Receive Approved Candidate"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "swanrawat07@gmail.com",
+          "mode": "list",
+          "cachedResultName": "swanrawat07@gmail.com"
+        },
+        "start": "={{ DateTime.now().plus({ days: 1 }).set({ hour: 10, minute: 0 }).toISO() }}",
+        "end": "={{ DateTime.now().plus({ days: 1 }).set({ hour: 11, minute: 0 }).toISO() }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ $json.email }}"
+          ],
+          "conferenceDataUi": {},
+          "description": "=Candidate Name:{{ $json.candidateName }} \nCandidate ID: {{ $json.candidateId }} \nPosition: {{ $json.position }}  \nEmail: {{ $json.email }}  \nInterview scheduled through the AI Recruitment Platform.",
+          "location": "=Online Interview ",
+          "summary": "=Interview -  {{ $json.candidateName }} {{ $json.position }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        416,
+        -96
+      ],
+      "id": "bcf32078-4d4e-4985-bd3b-ca1454df2d3c",
+      "name": "Schedule Interview",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "NbIwB8fvFDnEa8Wo",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "swanrawat07@gmail.com",
+        "subject": "=Interview Invitation – {{ $('Receive Approved Candidate').item.json.position }}",
+        "message": "=<p>Dear <b>{{ $('Receive Approved Candidate').item.json.candidateName }}</b>,</p>\n\n<p>Congratulations! 🎉</p>\n\n<p>We are pleased to inform you that you have been selected for the next stage of our recruitment process.</p>\n\n<h3>Interview Details</h3>\n\n<ul>\n<li><b>Position:</b>{{ $('Receive Approved Candidate').item.json.position }} </li>\n<li><b>Date & Time:</b> {{ $('Schedule Interview').item.json.start.dateTime }}</li>\n<li><b>Interview Mode:</b> Google Meet</li>\n<li><b>Calendar Event:</b>\n<a href=\"{{ $('Schedule Interview').item.json.htmlLink }}\">\nView Interview Event\n</a>\n</li>\n</ul>\n\n<p>Please join the interview 5–10 minutes before the scheduled time.</p>\n\n<p>We look forward to speaking with you.</p>\n\n<p>Best Regards,<br>\n<b>HR Team</b></p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        800,
+        -96
+      ],
+      "id": "258855d9-5bf9-44fc-8631-8cbfefff535b",
+      "name": "Send Interview Invitation",
+      "webhookId": "0963892f-a5ff-4d89-8014-5606db0afad4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "twzshz2SwRZ7WD23",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w",
+          "mode": "list",
+          "cachedResultName": "Recruitment Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Candidates",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Candidate ID": "={{ $('Receive Approved Candidate').item.json.candidateId }}",
+            "Status": "Interview Scheduled",
+            "Interview Date": "={{ $('Interview Date format').item.json.interviewDate }}{{ $('Interview Date format').item.json.interviewStart }}{{ $('Interview Date format').item.json.interviewEnd }}",
+            "Recommendation": "="
+          },
+          "matchingColumns": [
+            "Candidate ID"
+          ],
+          "schema": [
+            {
+              "id": "Candidate ID",
+              "displayName": "Candidate ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Position",
+              "displayName": "Position",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Experience",
+              "displayName": "Experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Skills",
+              "displayName": "Skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Resume Link",
+              "displayName": "Resume Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI Score",
+              "displayName": "AI Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Recommendation",
+              "displayName": "Recommendation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Interview Date",
+              "displayName": "Interview Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1040,
+        -96
+      ],
+      "id": "eb7bdcd2-f5a3-404e-9408-27ca5ac7d907",
+      "name": "Update Interview Date",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2B5rwfDOXRzh4RmC",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "🟪 Candidate Notification\nInterview invitation sent via Gmail.",
+        "height": 96,
+        "width": 224,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        800,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "2ef5a9a0-1399-468a-801e-5e8598adeec0",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "🟪 Calendar Integration\nMeeting date and time saved.",
+        "height": 96,
+        "width": 208,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        560,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "1b2a8220-2926-427c-9e52-4e30bca0b526",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "🟪 Interview Scheduling\nInterview created automatically in Google Calendar.",
+        "height": 112,
+        "width": 224,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        320,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "6484ec78-14dc-4f76-85d4-a41e22bb4e0e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const start = new Date($json.start.dateTime);\nconst end = new Date($json.end.dateTime);\n\nreturn {\n  json: {\n    ...$json,\n\n    interviewDate: start.toLocaleDateString('en-IN'),\n\n    interviewStart: start.toLocaleTimeString('en-IN', {\n      hour: '2-digit',\n      minute: '2-digit'\n    }),\n\n    interviewEnd: end.toLocaleTimeString('en-IN', {\n      hour: '2-digit',\n      minute: '2-digit'\n    })\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        608,
+        -96
+      ],
+      "id": "d45e5663-09b1-4dff-903d-b840c41a017d",
+      "name": "Interview Date format"
+    },
+    {
+      "parameters": {
+        "content": "🟪 Workflow 4: Interview Scheduling & Notifications\n\nThis workflow schedules interviews for approved candidates using Google Calendar, updates the interview details in Google Sheets, and sends interview invitations with the meeting information to the candidate.",
+        "width": 544,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        304,
+        -288
+      ],
+      "typeVersion": 1,
+      "id": "caa921c2-347f-44b5-8beb-f59306dee3bc",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {
+    "Receive Approved Candidate": [
+      {
+        "json": {
+          "candidateId": "CAN-1785494382233",
+          "candidateName": "Aman Sharma",
+          "email": "amanshrama23@gmail.com",
+          "position": "Software Engineer",
+          "resumeLink": "https://drive.google.com/file/d/1yfBIzcaLR6W_sykSlQLJVm-D94hALliG/view?usp=drivesdk",
+          "phone": 77892373487,
+          "status": "Approved"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Receive Approved Candidate": {
+      "main": [
+        [
+          {
+            "node": "Schedule Interview",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Interview": {
+      "main": [
+        [
+          {
+            "node": "Interview Date format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Interview Invitation": {
+      "main": [
+        [
+          {
+            "node": "Update Interview Date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Interview Date": {
+      "main": [
+        [
+          {
+            "node": "Call 'Workflow 5 - Offer Letter Generation'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Interview Date format": {
+      "main": [
+        [
+          {
+            "node": "Send Interview Invitation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "e3974d63-d658-4d49-95fe-ded400d78ade",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4ca1c7112b544090f0d76a244b5af4fa83a4120a1a88fbdabe53ffbbafc5bb41"
+  },
+  "nodeGroups": [],
+  "id": "GB9QzfeWECEwXlic",
+  "tags": []
+}
