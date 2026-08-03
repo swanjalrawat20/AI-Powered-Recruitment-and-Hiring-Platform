@@ -1,0 +1,857 @@
+{
+  "name": "Workflow 3 - Candidate Shortlisting & HR Approval",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "candidateId"
+            },
+            {
+              "name": "candidateName"
+            },
+            {
+              "name": "email"
+            },
+            {
+              "name": "position"
+            },
+            {
+              "name": "recommendation"
+            },
+            {
+              "name": "resume_score",
+              "type": "number"
+            },
+            {
+              "name": "resumeLink"
+            },
+            {
+              "name": "phone",
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        -192
+      ],
+      "id": "728fc95b-6173-4b50-aeda-7e225b8bb671",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "GB9QzfeWECEwXlic",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/GB9QzfeWECEwXlic",
+          "cachedResultName": "Workflow 4 : Interview Scheduling & Notifications."
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "candidateId": "={{ $json['Candidate ID'] }}",
+            "candidateName": "={{ $('Get Candidates Data').item.json.Name }}",
+            "email": "={{ $('Get Candidates Data').item.json.Email }}",
+            "position": "={{ $('Get Candidates Data').item.json.Position }}",
+            "phone": "={{ $('Get Candidates Data').item.json.Phone }}",
+            "resumeLink": "={{ $('Get Candidates Data').item.json['Resume Link'] }}",
+            "status": "={{ $json.Status }}",
+            "recommendation": "={{ $('Get Candidates Data').item.json.Recommendation }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "candidateId",
+              "displayName": "candidateId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "candidateName",
+              "displayName": "candidateName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "position",
+              "displayName": "position",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "resumeLink",
+              "displayName": "resumeLink",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "recommendation",
+              "displayName": "recommendation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        496,
+        -336
+      ],
+      "id": "83bd53f1-e04f-4047-9a9e-e051068e5470",
+      "name": "Call 'Workflow 4 : Interview Scheduling & Notifications.'"
+    },
+    {
+      "parameters": {
+        "sendTo": "swanrawat07@gmail.com",
+        "subject": "=HR Approval Required - {{$json.candidateName}}",
+        "message": "=<p>Dear HR,</p>\n\n<p>A new candidate has been evaluated by the <b>AI Recruitment Platform</b>.</p>\n\n<h3>Candidate Details</h3>\n\n<p><b>Candidate ID:</b> {{$json.candidateId}}</p>\n\n<p><b>Candidate Name:</b> {{$json.candidateName}}</p>\n\n<p><b>Email:</b> {{$json.email}}</p>\n\n<p><b>Phone:</b> {{$json.phone}}</p>\n\n<p><b>Position:</b> {{$json.position}}</p>\n\n<p><b>AI Resume Score:</b> {{$json.resume_score}}</p>\n\n<p><b>AI Recommendation:</b> {{$json.recommendation}}</p>\n\n<p><b>Resume:</b>\n<a href=\"{{$json.resumeLink}}\" target=\"_blank\">View Resume</a>\n</p>\n\n<p>\nPlease review the candidate and choose one of the following actions:\n</p>\n\n<hr>\n\n<p>\n<a href=\"https://swan20.app.n8n.cloud/webhook/hr-decisions?candidateId={{$json.candidateId}}&decision=approve\"\nstyle=\"background-color:#28a745;\ncolor:white;\npadding:12px 20px;\ntext-decoration:none;\nborder-radius:6px;\nfont-weight:bold;\ndisplay:inline-block;\">\n✅ Approve Candidate\n</a>\n</p>\n\n<p>\n<a href=\"https://swan20.app.n8n.cloud/webhook/hr-decisions?candidateId={{$json.candidateId}}&decision=reject\"\nstyle=\"background-color:#dc3545;\ncolor:white;\npadding:12px 20px;\ntext-decoration:none;\nborder-radius:6px;\nfont-weight:bold;\ndisplay:inline-block;\">\n❌ Reject Candidate\n</a>\n</p>\n\n<br>\n\n<p>Regards,</p>\n\n<p><b>AI Recruitment Platform</b></p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -576,
+        -192
+      ],
+      "id": "59b93dd1-022b-448e-a271-f0dc4644aac3",
+      "name": "Send Approval Email to HR",
+      "webhookId": "7b4f222d-63a8-4a91-8eeb-7f3b136c8a5e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "twzshz2SwRZ7WD23",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "hr-decisions",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -304,
+        -192
+      ],
+      "id": "1fffdbe1-c968-4559-bdac-3cd71100b02c",
+      "name": "Receive HR Decision",
+      "webhookId": "bd2ce423-1d7a-4d87-a03c-2df21d456aa9"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "de8e1fad-92fd-4bd3-ba4a-a46fd2d1f782",
+              "leftValue": "={{$node[\"Receive HR Decision\"].json.query.decision}}",
+              "rightValue": "approve",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        112,
+        -192
+      ],
+      "id": "4072b84c-bb99-4d59-8aff-e97522200f21",
+      "name": "Check HR Decision"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w",
+          "mode": "list",
+          "cachedResultName": "Recruitment Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Candidates",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Candidate ID": "={{ $json['Candidate ID'] }}",
+            "Status": "Approved",
+            "Recommendation": "={{ $('Get Candidates Data').item.json.Recommendation }}"
+          },
+          "matchingColumns": [
+            "Candidate ID"
+          ],
+          "schema": [
+            {
+              "id": "Candidate ID",
+              "displayName": "Candidate ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Position",
+              "displayName": "Position",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Experience",
+              "displayName": "Experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Skills",
+              "displayName": "Skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Resume Link",
+              "displayName": "Resume Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI Score",
+              "displayName": "AI Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Recommendation",
+              "displayName": "Recommendation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Interview Date",
+              "displayName": "Interview Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        304,
+        -336
+      ],
+      "id": "6e1bfed1-1228-44f1-abef-196ae484ae06",
+      "name": "Update Candidate Status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2B5rwfDOXRzh4RmC",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w",
+          "mode": "list",
+          "cachedResultName": "Recruitment Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Candidates",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "Rejected",
+            "Candidate ID": "={{ $json['Candidate ID'] }}"
+          },
+          "matchingColumns": [
+            "Candidate ID"
+          ],
+          "schema": [
+            {
+              "id": "Candidate ID",
+              "displayName": "Candidate ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Position",
+              "displayName": "Position",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Experience",
+              "displayName": "Experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Skills",
+              "displayName": "Skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Resume Link",
+              "displayName": "Resume Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI Score",
+              "displayName": "AI Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Recommendation",
+              "displayName": "Recommendation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Interview Date",
+              "displayName": "Interview Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        304,
+        -112
+      ],
+      "id": "1845df63-c9e8-4f18-9289-084e7064f1a8",
+      "name": "Update Candidate Status1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2B5rwfDOXRzh4RmC",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "swanrawat07@gmail.com",
+        "subject": "=Application Update –  {{ $('Get Candidates Data').item.json.Position }}",
+        "emailType": "text",
+        "message": "=Dear {{ $('Get Candidates Data').item.json.Name }},\nThank you for applying for the position of {{ $('Get Candidates Data').item.json.Position }} .\n\nWe appreciate the time and effort you invested in submitting your application and participating in our recruitment process.\n\nAfter carefully reviewing your profile, we have decided to move forward with other candidates whose qualifications more closely match our current requirements.\n\nWe encourage you to apply for future opportunities with us, and we wish you the very best in your career journey.\n\nThank you once again for your interest.\n\nBest Regards,\nHR Team",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        -112
+      ],
+      "id": "e61c5c12-901b-4a99-96ff-fb5511cc6b8f",
+      "name": "Send Rejection Email",
+      "webhookId": "1f4a206e-ce5a-493a-a0be-c031091ea0d1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "twzshz2SwRZ7WD23",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w",
+          "mode": "list",
+          "cachedResultName": "Recruitment Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Candidates",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Candidate ID",
+              "lookupValue": "={{ $json.query.candidateId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -80,
+        -192
+      ],
+      "id": "351d36a6-4326-4649-8fcf-2b1f09474f46",
+      "name": "Get Candidates Data",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2B5rwfDOXRzh4RmC",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "🟩 HR Review\nHR receives candidate profile and AI evaluation.",
+        "height": 112,
+        "width": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -720,
+        -16
+      ],
+      "typeVersion": 1,
+      "id": "735f4eb5-36ee-4753-a0a0-7374ab858fbe",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "🟩 Approval Decision\nHR clicks Approve or Reject.",
+        "height": 96,
+        "width": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -304,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "73c9f8f9-184b-47e4-9121-e902d8f2e201",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "🟩 Database Update\nStatus updated in Google Sheets.",
+        "height": 128,
+        "width": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        48,
+        -384
+      ],
+      "typeVersion": 1,
+      "id": "04fc609c-cacc-49fb-944c-224b9ff1f317",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "🟩 Candidate Notification\nRejected candidates receive an email automatically.",
+        "height": 128,
+        "width": 224,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        464,
+        48
+      ],
+      "typeVersion": 1,
+      "id": "f30f2fbb-0489-4e14-b957-acdc1c764a22",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "🟩 Workflow 3: HR Approval & Decision\n\nThis workflow allows HR to review AI recommendations and candidate details. HR can approve or reject candidates using email action buttons. The decision is recorded in Google Sheets, and rejected candidates are automatically notified.",
+        "width": 576,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -816,
+        -416
+      ],
+      "typeVersion": 1,
+      "id": "a88b1586-8777-4fc2-80e8-38ea28cdc3dc",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {
+    "Receive HR Decision": [
+      {
+        "json": {
+          "headers": {
+            "host": "swan20.app.n8n.cloud",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "accept-encoding": "gzip, br",
+            "accept-language": "en-US,en;q=0.9",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "2404:7c80:8c:33c0:702b:4007:ec12:8549",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "IN",
+            "cf-ray": "a2560aa61d0325cd-DEL",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "cookie": "_fbp=fb.1.1785165875217.712515197648208363; _ga=GA1.1.622167310.1785165875; _gcl_au=1.1.1685743106.1785165968; rl_page_init_referrer=RudderEncrypt%3AU2FsdGVkX1%2BZLpeZjWjK%2BC7dlrWZ%2FQKU6z1kTbUd83A%3D; rl_anonymous_id=RudderEncrypt%3AU2FsdGVkX19bOiqUW9jCzfpF%2BhaUHEizPOEm9%2FkSvImByCXX9UDWxCgQrm7UeNSaB455cOyOG33XXvjz0A59Gw%3D%3D; rl_user_id=RudderEncrypt%3AU2FsdGVkX19rH8WNOa%2Brq8kLXTSSWyPOxomLSDhLMVxMYRNRyPoHemRwzsBsElS3L1IeAvQJQjNTSj7KWAObJlSHo4BUXDaSTxthB%2FwfzcIlk%2Bs3jw8R5zYl9HzLWMYt8wdGoXL8a80uI%2FKSFVHO3dOzvCrpRmTqwZXZAC7vv8M%3D; rl_trait=RudderEncrypt%3AU2FsdGVkX18tT8LDvSMmGpKKs52ynkhmylVGezpS%2BE5xRDKdibe4cP6wm9mjWZy1fXHw70BYyv16CS1u7VeogpN0TIBfAIlHWOkSreciGNDXS8yHaOSY1SuIZweFHZVClMgplAxaUIfkMPjr5zQRPJnT3KxgJ1ib25smynLy%2BIwbdhVenZzsLcnVVFvEU2GD60ZmfcICiT8MyL4mZEePOhVY%2Bjl2%2FD1iWZOjDiWyZ8A%3D; n8n_anonymous_id=31dffc80-0d03-45ae-ba42-0031620b2bd2; _ga_0SC4FF2FH9=GS2.1.s1785762947$o14$g1$t1785764205$j1$l0$h0; rl_session=RudderEncrypt%3AU2FsdGVkX1%2FQLI%2BomlejbSV7Xz2Pr%2BoGvBkejcC4iJYFm1gKjhJZCdK8yA4V4YpaeZA8cfScpCN1Xy%2FAR7PiQKgoy4v%2BKyXdCHk7q%2BzWrlMc%2BAS4r9jW%2B6eyG8OZWRlADStvRLwGtr1DYDnbyXeELg%3D%3D; ph_phc_kMstNfAgBcBkWSh6KdsgN09heqqNe5VNmalHP1Ni9Q4_posthog=%7B%22%24device_id%22%3A%224ca1c7112b544090f0d76a244b5af4fa83a4120a1a88fbdabe53ffbbafc5bb41%233d7e6bdc-29d8-4eae-aa78-a40a0e9ed7bc%22%2C%22distinct_id%22%3A%224ca1c7112b544090f0d76a244b5af4fa83a4120a1a88fbdabe53ffbbafc5bb41%233d7e6bdc-29d8-4eae-aa78-a40a0e9ed7bc%22%2C%22%24sesid%22%3A%5B1785767589362%2C%22019fc7a1-f19c-7eaf-90e7-d2f5f5b337db%22%2C1785760706971%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22https%3A%2F%2Fswan20.app.n8n.cloud%2F%22%7D%2C%22%24user_state%22%3A%22identified%22%7D",
+            "if-none-match": "W/\"22-6OS7cK0FzqnV2NeDHdOSGS1bVUs\"",
+            "priority": "u=0, i",
+            "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "document",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-site": "cross-site",
+            "sec-fetch-user": "?1",
+            "upgrade-insecure-requests": "1",
+            "x-forwarded-for": "2404:7c80:8c:33c0:702b:4007:ec12:8549, 104.23.216.159",
+            "x-forwarded-host": "swan20.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-prod-users-swc-37-c6fbbc655-qqcmm",
+            "x-is-trusted": "yes",
+            "x-real-ip": "2404:7c80:8c:33c0:702b:4007:ec12:8549"
+          },
+          "params": {},
+          "query": {
+            "candidateId": "CAN-1785765104807",
+            "decision": "approve"
+          },
+          "body": {},
+          "webhookUrl": "https://swan20.app.n8n.cloud/webhook/hr-decisions",
+          "executionMode": "production"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Send Approval Email to HR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Receive HR Decision": {
+      "main": [
+        [
+          {
+            "node": "Get Candidates Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check HR Decision": {
+      "main": [
+        [
+          {
+            "node": "Update Candidate Status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Candidate Status1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Candidate Status": {
+      "main": [
+        [
+          {
+            "node": "Call 'Workflow 4 : Interview Scheduling & Notifications.'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Candidate Status1": {
+      "main": [
+        [
+          {
+            "node": "Send Rejection Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Candidates Data": {
+      "main": [
+        [
+          {
+            "node": "Check HR Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "7d05c732-f34a-48ec-bfd9-fa42af826994",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4ca1c7112b544090f0d76a244b5af4fa83a4120a1a88fbdabe53ffbbafc5bb41"
+  },
+  "nodeGroups": [],
+  "id": "sklF4fg4Yhri0Ztt",
+  "tags": []
+}

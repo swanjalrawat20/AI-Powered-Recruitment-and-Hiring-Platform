@@ -1,0 +1,475 @@
+{
+  "name": "Workflow 5 - Offer Letter Generation",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "candidateId"
+            },
+            {
+              "name": "candidateName"
+            },
+            {
+              "name": "email"
+            },
+            {
+              "name": "position"
+            },
+            {
+              "name": "status"
+            },
+            {
+              "name": "resumeLink"
+            },
+            {
+              "name": "phone",
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -64,
+        0
+      ],
+      "id": "ce9488c4-d8a7-4286-a96c-02146bd107de",
+      "name": "Receive Selected Candidate"
+    },
+    {
+      "parameters": {
+        "jsCode": "const name = $input.first().json.candidateName;\nconst position = $input.first().json.position;\nconst candidateId = $input.first().json.candidateId;\n\nconst date = new Date().toLocaleDateString(\"en-IN\", {\n  day: \"2-digit\",\n  month: \"long\",\n  year: \"numeric\"\n});\n\nconst joiningDate = new Date();\njoiningDate.setDate(joiningDate.getDate() + 15);\n\nconst joining = joiningDate.toLocaleDateString(\"en-IN\", {\n  day: \"2-digit\",\n  month: \"long\",\n  year: \"numeric\"\n});\n\nconst html = `\n<html>\n<body>\n\n<h2 style=\"text-align:center;\">\nABC Technologies Pvt. Ltd.\n</h2>\n\n<hr>\n\n<p>Date: ${date}</p>\n\n<h3>Offer Letter</h3>\n\n<p>Dear <b>${name}</b>,</p>\n\n<p>Congratulations!</p>\n\n<p>\nWe are pleased to offer you the position of\n<b>${position}</b> at ABC Technologies Pvt. Ltd.\n</p>\n\n<p>\nBased on your interview performance and evaluation,\nwe are delighted to welcome you to our organization.\n</p>\n\n<h3>Employment Details</h3>\n\n<table border=\"1\" cellpadding=\"8\">\n\n<tr>\n<td>Candidate ID</td>\n<td>${candidateId}</td>\n</tr>\n\n<tr>\n<td>Name</td>\n<td>${name}</td>\n</tr>\n\n<tr>\n<td>Position</td>\n<td>${position}</td>\n</tr>\n\n<tr>\n<td>Joining Date</td>\n<td>${joining}</td>\n</tr>\n\n<tr>\n<td>Employment Type</td>\n<td>Full-Time</td>\n</tr>\n\n</table>\n\n<br>\n\n<p>Please confirm your acceptance within 7 days.</p>\n\n<p>We look forward to having you in our team.</p>\n\n<br>\n\n<p>\nRegards,<br>\n<b>HR Department</b><br>\nABC Technologies Pvt. Ltd.\n</p>\n\n</body>\n</html>\n`;\n\nreturn [\n  {\n    json: {\n      html,\n      fileName: `Offer Letter - ${name}.pdf`\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        144,
+        0
+      ],
+      "id": "11083948-03f1-4a0f-9461-f95044fa8ac5",
+      "name": "Generate Offer Letter HTML"
+    },
+    {
+      "parameters": {
+        "html_content": "={{$json.html}}",
+        "output_format": "file",
+        "output_filename": "={{$json.fileName}}"
+      },
+      "type": "n8n-nodes-htmlcsstopdf.htmlcsstopdf",
+      "typeVersion": 1,
+      "position": [
+        368,
+        0
+      ],
+      "id": "b4bfbd2f-de70-415d-ba7b-2678c300a0b9",
+      "name": "Convert Offer Letter to PDF",
+      "credentials": {
+        "htmlcsstopdfApi": {
+          "id": "rcbxlkhpVGFye1TD",
+          "name": "HTML to PDF account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{$json.fileName}}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1y_MaXjMDjFuUr8rd4yNaRDV949eT-3ou",
+          "mode": "list",
+          "cachedResultName": "Offer letters",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1y_MaXjMDjFuUr8rd4yNaRDV949eT-3ou"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        640,
+        0
+      ],
+      "id": "fdeb51b5-26c6-4860-abb1-ebdb7107506a",
+      "name": "Save Offer Letter",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "SsuIcJuJKT5dNDMQ",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "swanrawat07@gmail.com",
+        "subject": "Congratulations! Offer Letter - ABC Technologies Pvt. Ltd.",
+        "message": "=<p>Dear <b>{{$node[\"Receive Selected Candidate\"].json.candidateName}}</b>,</p>\n\n<p>Congratulations! 🎉</p>\n\n<p>We are delighted to offer you the position of <b>{{$node[\"Receive Selected Candidate\"].json.position}}</b> at <b>ABC Technologies Pvt. Ltd.</b></p>\n\n<p>Please review your offer letter by clicking the link below:</p>\n\n<p>\n<a href=\"{{ $json.webViewLink }}\" target=\"_blank\">\n📄 View Offer Letter\n</a>\n</p>\n\n<p>Please confirm your acceptance within <b>7 days</b>.</p>\n\n<p>We are excited to welcome you to our team.</p>\n\n<p>Best Regards,<br>\n<b>HR Department</b><br>\nABC Technologies Pvt. Ltd.</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        928,
+        0
+      ],
+      "id": "f14b6dc1-e235-44fa-8569-9e8a3d92ef00",
+      "name": "Send Offer Letter",
+      "webhookId": "dc1e07d8-0a81-4873-af5d-6bd9fe43f4d7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "twzshz2SwRZ7WD23",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w",
+          "mode": "list",
+          "cachedResultName": "Recruitment Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Candidates",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "Hired",
+            "Candidate ID": "={{ $('Receive Selected Candidate').item.json.candidateId }}",
+            "Offer Letter Sent": "yes"
+          },
+          "matchingColumns": [
+            "Candidate ID"
+          ],
+          "schema": [
+            {
+              "id": "Candidate ID",
+              "displayName": "Candidate ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Position",
+              "displayName": "Position",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Experience",
+              "displayName": "Experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Skills",
+              "displayName": "Skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Resume Link",
+              "displayName": "Resume Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI Score",
+              "displayName": "AI Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Recommendation",
+              "displayName": "Recommendation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Interview Date",
+              "displayName": "Interview Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Offer Letter Sent",
+              "displayName": "Offer Letter Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1104,
+        0
+      ],
+      "id": "3dbb34bf-87cc-4880-a271-7744d5eaa1b3",
+      "name": "Update Hiring Status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2B5rwfDOXRzh4RmC",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "🟧 Offer Letter Creation\nGenerate personalized offer letter.",
+        "height": 96,
+        "width": 208,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "d418002b-716b-4a6c-abca-4ae112714e5f",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "🟧 Candidate Notification\nEmail offer letter to selected candidate",
+        "height": 96,
+        "width": 224,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        864,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "24c9b2d2-33e5-4726-9abd-f474c54df058",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "🟧 Document Storage\nSave offer letter in Google Drive.",
+        "height": 96,
+        "width": 224,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        560,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "dbdfddd2-1704-4707-a003-61b62b7d0635",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "🟧 PDF Generation\nConvert HTML into PDF document.",
+        "height": 96,
+        "width": 208,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        288,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "cd40b330-0a2d-453b-82c1-e445e786ce8d",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "🟧 Workflow 5: Offer Letter Generation\n\nThis workflow generates a personalized offer letter, converts it into a PDF, stores it in Google Drive, emails it to the selected candidate, and updates the recruitment database with the hiring status.",
+        "width": 560,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        128,
+        -304
+      ],
+      "typeVersion": 1,
+      "id": "1cab5958-240b-41ad-a6eb-b0c48e8554e8",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Receive Selected Candidate": {
+      "main": [
+        [
+          {
+            "node": "Generate Offer Letter HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Offer Letter HTML": {
+      "main": [
+        [
+          {
+            "node": "Convert Offer Letter to PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Offer Letter to PDF": {
+      "main": [
+        [
+          {
+            "node": "Save Offer Letter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Offer Letter": {
+      "main": [
+        [
+          {
+            "node": "Send Offer Letter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Offer Letter": {
+      "main": [
+        [
+          {
+            "node": "Update Hiring Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "585e873f-07fe-452d-8882-08345bfa0edb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4ca1c7112b544090f0d76a244b5af4fa83a4120a1a88fbdabe53ffbbafc5bb41"
+  },
+  "nodeGroups": [],
+  "id": "oDaoBZ49MACNNDnI",
+  "tags": []
+}

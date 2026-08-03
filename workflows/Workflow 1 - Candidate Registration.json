@@ -1,0 +1,604 @@
+{
+  "name": "Workflow 1 - Candidate Registration",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "c0MCJ221rj1tdJCH",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/c0MCJ221rj1tdJCH",
+          "cachedResultName": "Workflow 2 - AI Resume Screening"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "candidateId": "={{ $('Store Candidate Details').item.json['Candidate ID'] }}",
+            "resumeFileId": "={{ $('Upload Resume to Google Drive').item.json.id }}",
+            "candidateName": "={{ $('Candidate Registration Form').item.json['Full Name'] }}",
+            "position         ": "={{ $('Candidate Registration Form').item.json.Position }}",
+            "email": "={{ $('Candidate Registration Form').item.json['Email Address'] }}",
+            "resumelink": "={{ $('Upload Resume to Google Drive').item.json.webViewLink }}",
+            "phone": "={{ $('Candidate Registration Form').item.json['Phone Number'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "candidateId",
+              "displayName": "candidateId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "resumeFileId",
+              "displayName": "resumeFileId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "candidateName",
+              "displayName": "candidateName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "position         ",
+              "displayName": "position         ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "resumelink",
+              "displayName": "resumelink",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "16573f35-37be-4913-9d47-d3a487b2e607",
+      "name": "Call 'Workflow 2 - AI Resume Screening'",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "formTitle": "AI Recruitment Portal",
+        "formDescription": "Apply for your dream job. Fill in the details below.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email Address",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Phone Number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Position",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Software Engineer"
+                  },
+                  {
+                    "option": "Frontend Developer "
+                  },
+                  {
+                    "option": "Backend Developer "
+                  },
+                  {
+                    "option": "Data Scientist"
+                  },
+                  {
+                    "option": "AI Engineer"
+                  },
+                  {
+                    "option": "DevOps Engineer"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Experience",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "0-1"
+                  },
+                  {
+                    "option": "1-3"
+                  },
+                  {
+                    "option": "3-5"
+                  },
+                  {
+                    "option": "5+"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Skills"
+            },
+            {
+              "fieldLabel": "File Upload",
+              "fieldType": "file",
+              "fieldName": "Resume",
+              "acceptFileTypes": ".pdf, .doc, .docx",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Cover Letter (Optional)"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2359e77a-cd42-440e-861d-bf79076dbd63",
+      "name": "Candidate Registration Form",
+      "webhookId": "feb4916b-7f74-4124-a560-ff139d8855c6"
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "Resume",
+        "name": "=={{$binary.Resume.fileName}}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1KORvmSCkVGuj0ePVhsyMGdj_HVe45MZQ",
+          "mode": "list",
+          "cachedResultName": "Resume",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1KORvmSCkVGuj0ePVhsyMGdj_HVe45MZQ"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "b11012d3-24e0-46f0-9ce4-e75bab1ef82e",
+      "name": "Upload Resume to Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "SsuIcJuJKT5dNDMQ",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w",
+          "mode": "list",
+          "cachedResultName": "Recruitment Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Candidates",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wHy6IAbe_EfT1oGCN3ep4g0680PZ_JxpcOP9NTUQU0w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Candidate ID": "={{ $('Generate Id').item.json.candidateId }}",
+            "Email": "={{ $('Candidate Registration Form').item.json['Email Address'] }}",
+            "Phone": "={{ $('Candidate Registration Form').item.json['Phone Number'] }}",
+            "Position": "={{ $('Candidate Registration Form').item.json.Position }}",
+            "Status": "Applied",
+            "Name": "={{ $('Candidate Registration Form').item.json['Full Name'] }}",
+            "Experience": "={{ $('Candidate Registration Form').item.json.Experience }}",
+            "Skills": "={{ $('Candidate Registration Form').item.json.Skills }}",
+            "Resume Link": "={{ $json.webViewLink }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Candidate ID",
+              "displayName": "Candidate ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Position",
+              "displayName": "Position",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Experience",
+              "displayName": "Experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Skills",
+              "displayName": "Skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Resume Link",
+              "displayName": "Resume Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI Score",
+              "displayName": "AI Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Interview Date",
+              "displayName": "Interview Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        624,
+        0
+      ],
+      "id": "21c621a3-fc1a-4c9b-9787-ba5d183abf0a",
+      "name": "Store Candidate Details",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2B5rwfDOXRzh4RmC",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "swanrawat07@gmail.com",
+        "subject": "Application Received – AI Recruitment Portal",
+        "emailType": "text",
+        "message": "=Hi {{ $json.Name }},  \nThank you for applying for the {{ $json.Position }} position.  Your application has been received successfully.  \nCandidate ID: {{ $json['Candidate ID'] }} \nOur AI system will review your resume shortly. If you're shortlisted, you'll receive an interview invitation.\nRegards, \nHR Team AI Recruitment Portal",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        832,
+        0
+      ],
+      "id": "80a29a87-f28b-4868-92a9-cf5b3d8bf641",
+      "name": "Send Registration Confirmation",
+      "webhookId": "e588312b-500f-4483-8f68-c770f5fa3fbd",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "twzshz2SwRZ7WD23",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "🟨 Form Submission\nCandidate submits application using Google Form.",
+        "height": 112,
+        "width": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -48,
+        160
+      ],
+      "typeVersion": 1,
+      "id": "7d884b6d-c843-4441-b7cb-552f86226a2b",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "🟨 Acknowledgement Email\nConfirmation email sent to the candidate.",
+        "height": 112,
+        "width": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        848,
+        176
+      ],
+      "typeVersion": 1,
+      "id": "c84af785-9c35-4820-b927-85f446fcb0f6",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "🟨 Candidate Database\nCandidate details are stored in Google Sheets.",
+        "height": 96,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        592,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "f8dc3bf4-c657-44bd-b682-1c4335d9fb6a",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "🟨 RESUME STORAGE\nResume is automatically uploaded to Google Drive.",
+        "height": 128,
+        "width": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        352,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "83ee4a37-cf22-410c-a2bb-cd67a771dce4",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "152c98af-f555-47ba-80fd-7f8b615479bf",
+              "name": "candidateId",
+              "value": "={{'CAN-' + Date.now()}}",
+              "type": "string"
+            },
+            {
+              "id": "9eba2126-fa61-4ce6-9c42-a899dfea2328",
+              "name": "applicationDate",
+              "value": "=={{$now}}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "f8e19c75-f99b-4c5f-ac72-0de9819fa6b2",
+      "name": "Generate Id"
+    },
+    {
+      "parameters": {
+        "content": "🟨 Workflow 1: Candidate Registration & Resume Collection\n\nThis workflow collects candidate information through a Google Form, uploads resumes to Google Drive, stores applicant details in Google Sheets, and sends a confirmation email. It serves as the entry point of the AI Recruitment Platform.",
+        "width": 704
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "209c052c-d178-450c-a140-0d02945b625d",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Candidate Registration Form": {
+      "main": [
+        [
+          {
+            "node": "Generate Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Resume to Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Store Candidate Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Candidate Details": {
+      "main": [
+        [
+          {
+            "node": "Send Registration Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Registration Confirmation": {
+      "main": [
+        [
+          {
+            "node": "Call 'Workflow 2 - AI Resume Screening'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Id": {
+      "main": [
+        [
+          {
+            "node": "Upload Resume to Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "cacc061d-e1a2-4875-a3d6-60908f783f99",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4ca1c7112b544090f0d76a244b5af4fa83a4120a1a88fbdabe53ffbbafc5bb41"
+  },
+  "nodeGroups": [],
+  "id": "4N7xnLPpUxOZCYDA",
+  "tags": []
+}
